@@ -1,0 +1,46 @@
+server:
+  servlet:
+    context-path: /security
+  port: 8082
+swagger:
+  enabled: true
+spring:
+  application:
+    name: security
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  datasource:
+    username: root
+    password: root
+    #    url: jdbc:mysql://localhost:3306/user_security?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Hongkong
+    #    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver #sql????
+    url: jdbc:p6spy:mysql://10.0.10.187:3306/smiling_datasource?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Hongkong&allowPublicKeyRetrieval=true
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*.xml
+
+logging:
+  config: ./logback-spring.xml
+
+jwt:
+  tokenType: 'Bearer '
+  tokenHeader: Authorization
+  secret: cuAihCz53DZRjZwbsGcZJ2Ai6At+T142uphtJMsk7iQ=
+  expiration: 604800
+
+secure:
+  urls:
+    ignored:
+      - /swagger-ui/**
+      - /swagger-resources/**
+      - /webjars/**
+      - /v3/**
+      - /favicon.ico
+      - /doc.html
+      - /register
+      - /login
+      - /auth
+      - /callback
+    login: http://127.0.0.1:8082/security/doc.html
+
