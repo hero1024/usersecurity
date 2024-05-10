@@ -84,6 +84,8 @@ public class LoginServiceImpl implements LoginService {
         }
         String encodePassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodePassword);
+        user.setStatus(1);
+        user.setRoleId(1);
         userService.save(user);
         return 0;
     }
