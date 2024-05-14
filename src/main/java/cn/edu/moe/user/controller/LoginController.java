@@ -60,6 +60,7 @@ public class LoginController {
     @Operation(description = "验证token")
     @RequestMapping("/auth")
     public ResponseEntity<String> auth(HttpServletRequest request, HttpServletResponse response){
+        String sourceIP = request.getHeader("X-Forwarded-For");
         String originalUri = request.getHeader("X-Forwarded-Uri");
         String authHeader = request.getHeader(tokenHeader);
         if (authHeader != null && authHeader.startsWith(tokenType)) {
@@ -75,9 +76,10 @@ public class LoginController {
                             SecurityContextHolder.getContext().setAuthentication(authentication);
                         }
                         User user = loginService.getUserByUsername(username);
-                        log.info("权限校验通过， username:{}, originalUri：{}", username, originalUri);
+                        log.info("权限校验通过， username:{}, originalUri：{}, sourceIP:{}", username, originalUri, sourceIP);
                         HttpHeaders headers = new HttpHeaders();
                         headers.add("X-User-ID", String.valueOf(user.getId()));
+                        headers.add("X-Forwarded-For", sourceIP);
                         return new ResponseEntity<>(authToken, headers, HttpStatus.OK);
                     }
                 }

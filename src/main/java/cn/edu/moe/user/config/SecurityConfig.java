@@ -17,6 +17,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.time.Duration;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -38,6 +44,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated()
+                //支持跨域访问
+                .and()
+                .cors()
+                .configurationSource(corsConfigurationSource())
                 // 关闭跨站请求防护及不使用session
                 .and()
                 .csrf()
@@ -54,6 +64,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         //动态权限校验过滤器
         registry.and().addFilterBefore(securityFilter(), FilterSecurityInterceptor.class);
+    }
+
+    /**
+     * 开启 Spring Security 对跨域的支持
+     *
+     * @return
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(Collections.singletonList("*"));
+        configuration.setAllowedMethods(Collections.singletonList("*"));
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
+        configuration.setMaxAge(Duration.ofHours(1));
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     /**
