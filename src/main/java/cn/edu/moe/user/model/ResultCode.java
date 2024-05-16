@@ -6,7 +6,7 @@ package cn.edu.moe.user.model;
 public enum ResultCode implements IErrorCode {
     SUCCESS(200, "Success"),
     FAILED(500, "Fail"),
-    VALIDATE_FAILED(404, "参数检验失败"),
+    VALIDATE_FAILED(400, "参数检验失败"),
     UNAUTHORIZED(401, "token已失效"),
     FORBIDDEN(403, "没有相关权限");
 

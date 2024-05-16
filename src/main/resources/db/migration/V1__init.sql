@@ -1,36 +1,35 @@
 
 create table permission
 (
-    id          int auto_increment
+    id          int auto_increment comment '主键ID'
         primary key,
-    path        varchar(255)             null,
-    role_ids    varchar(255) default '1' null,
-    description varchar(255)             null
+    path        varchar(255)             null comment '资源路径',
+    role_ids    varchar(255) default '1' null comment '角色ID',
+    description varchar(255)             null comment '描述'
 );
 
 create table role
 (
-    id          int     auto_increment      not null,
-    name        varchar(255) null,
-    description varchar(255) null,
+    id          int     auto_increment      not null comment '主键ID'
+        primary key,
+    name        varchar(255) null comment '角色名称',
+    description varchar(255) null comment '描述',
     constraint role_id_uindex
         unique (id)
 );
 
-alter table role
-    add primary key (id);
 
 create table user
 (
     id       bigint     auto_increment    not null comment '主键ID'
         primary key,
-    username varchar(255)  null unique,
-    password varchar(255)  null,
+    username varchar(255)  null unique comment '用户名',
+    password varchar(255)  null comment '密码',
     nickname varchar(30)   null comment '姓名',
-    phone      bigint(11)           null comment '年龄',
+    phone      bigint(11)           null comment '手机号',
     email    varchar(50)   null comment '邮箱',
-    status   int default 1 null,
-    role_id  int default 1 null
+    status   int default 1 null comment '状态',
+    role_id  int default 1 null comment '角色ID'
 );
 
 CREATE TABLE `user_bind_third_login`  (
@@ -52,9 +51,7 @@ INSERT INTO `permission` (`id`, `path`, `role_ids`, `description`) VALUES (1, '/
 INSERT INTO `permission` (`id`, `path`, `role_ids`, `description`) VALUES (2, '/role/**', '3', '角色管理');
 INSERT INTO `permission` (`id`, `path`, `role_ids`, `description`) VALUES (3, '/permission/**', '3', '权限管理');
 INSERT INTO `permission` (`id`, `path`, `role_ids`, `description`) VALUES (4, '/smiling/dbsource/**', '2,3', '数据源管理');
-INSERT INTO `permission` (`id`, `path`, `role_ids`, `description`) VALUES (5, '/smiling/question/add/*', '2,3', '问数问题新增权限');
-INSERT INTO `permission` (`id`, `path`, `role_ids`, `description`) VALUES (6, '/smiling/question/update/**', '2,3', '问数问题修改权限');
-INSERT INTO `permission` (`id`, `path`, `role_ids`, `description`) VALUES (7, '/smiling/question/delete/**', '2,3', '问数问题删除权限');
+INSERT INTO `permission` (`id`, `path`, `role_ids`, `description`) VALUES (5, '/smiling/question/**', '2,3', '问数后管');
 
 
 INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `phone`, `email`, `status`, `role_id`) VALUES (1, 'common', '$2a$10$mYpn.aSvG4D4h.nLng/tvOTvZEOeJNQh/IGfpRDitCXEen/tb0ebu', '普通用户', NULL, NULL, 1, 1);

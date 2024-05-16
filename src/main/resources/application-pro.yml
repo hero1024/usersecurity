@@ -27,7 +27,7 @@ jwt:
   tokenType: 'Bearer '
   tokenHeader: Authorization
   secret: cuAihCz53DZRjZwbsGcZJ2Ai6At+T142uphtJMsk7iQ=
-  expiration: 604800
+  expiration: 28800
 
 secure:
   urls:
@@ -42,5 +42,5 @@ secure:
       - /login
       - /auth
       - /callback
-    login: http://127.0.0.1:8082/security/doc.html
+    login: http://localhost:8080/#/
 

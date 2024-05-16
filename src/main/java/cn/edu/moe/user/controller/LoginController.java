@@ -25,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -76,7 +77,7 @@ public class LoginController {
                             SecurityContextHolder.getContext().setAuthentication(authentication);
                         }
                         User user = loginService.getUserByUsername(username);
-                        log.info("权限校验通过， username:{}, originalUri：{}, sourceIP:{}", username, originalUri, sourceIP);
+                        log.info("========= 权限校验通过， username:{}, sourceIP:{}, originalUri：{}, authHeader:{} =========", username, sourceIP, originalUri, authHeader);
                         HttpHeaders headers = new HttpHeaders();
                         headers.add("X-User-ID", String.valueOf(user.getId()));
                         headers.add("X-Forwarded-For", sourceIP);
@@ -87,10 +88,11 @@ public class LoginController {
         }
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", urlsConfig.getLogin());
-//        return new ResponseEntity<>("token验证失败", headers, HttpStatus.FOUND);
+        //return new ResponseEntity<>("token验证失败", headers, HttpStatus.FOUND);
         return new ResponseEntity<>("token验证失败", headers, HttpStatus.UNAUTHORIZED);
     }
 
+    @Operation(description = "获取用户信息")
     @GetMapping("/userinfo")
     public CommonResult<UserInfo> userinfo(HttpServletRequest request) {
         String authHeader = request.getHeader(tokenHeader);
@@ -114,7 +116,7 @@ public class LoginController {
 
     @Operation(description = "登录")
     @PostMapping("/login")
-    public CommonResult<String> login(@RequestBody UserVo userVo) {
+    public CommonResult<String> login(@Validated @RequestBody UserVo userVo) {
         String token = loginService.login(userVo.getUsername(), userVo.getPassword());
         if (token == null) {
             return CommonResult.validateFailed("用户名或密码错误");
@@ -127,7 +129,7 @@ public class LoginController {
 
     @Operation(description = "注册")
     @PostMapping("/register")
-    public CommonResult<String> register(@RequestBody UserVo userVo) {
+    public CommonResult<String> register(@Validated @RequestBody UserVo userVo) {
         User user = new User();
         BeanUtils.copyProperties(userVo, user);
         int result = loginService.register(user);
@@ -139,7 +141,7 @@ public class LoginController {
 
     @Operation(description = "修改密码")
     @PostMapping("/change/password")
-    public CommonResult<String> changePwd(@RequestBody UserVo userVo) {
+    public CommonResult<String> changePwd(@Validated @RequestBody UserVo userVo) {
         if (!loginService.changePwd(userVo)) {
             return CommonResult.failed("用户名或密码错误");
         }

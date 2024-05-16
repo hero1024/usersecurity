@@ -4,6 +4,7 @@ package cn.edu.moe.user.controller;
 import cn.edu.moe.user.entity.User;
 import cn.edu.moe.user.model.CommonResult;
 import cn.edu.moe.user.service.IUserService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import java.util.regex.Pattern;
  * @author songpeijiang
  * @since 2024-04-18
  */
+@Api(tags = "用户管理")
 @RestController
 @RequestMapping("/user")
 public class UserController {
