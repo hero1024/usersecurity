@@ -60,7 +60,7 @@ public class LoginController {
 
     @Operation(description = "验证token")
     @RequestMapping("/auth")
-    public ResponseEntity<String> auth(HttpServletRequest request, HttpServletResponse response){
+    public ResponseEntity<CommonResult<String>> auth(HttpServletRequest request, HttpServletResponse response){
         String sourceIP = request.getHeader("X-Forwarded-For");
         String originalUri = request.getHeader("X-Forwarded-Uri");
         String authHeader = request.getHeader(tokenHeader);
@@ -81,7 +81,7 @@ public class LoginController {
                         HttpHeaders headers = new HttpHeaders();
                         headers.add("X-User-ID", String.valueOf(user.getId()));
                         headers.add("X-Forwarded-For", sourceIP);
-                        return new ResponseEntity<>(authToken, headers, HttpStatus.OK);
+                        return new ResponseEntity<>(CommonResult.success(authToken), headers, HttpStatus.OK);
                     }
                 }
             }
@@ -89,7 +89,7 @@ public class LoginController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", urlsConfig.getLogin());
         //return new ResponseEntity<>("token验证失败", headers, HttpStatus.FOUND);
-        return new ResponseEntity<>("token验证失败", headers, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(CommonResult.unauthorized("token验证失败"), headers, HttpStatus.UNAUTHORIZED);
     }
 
     @Operation(description = "获取用户信息")
