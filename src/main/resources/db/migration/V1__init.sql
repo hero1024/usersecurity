@@ -1,24 +1,27 @@
-
+drop table if exists permission;
 create table permission
 (
     id          int auto_increment comment '主键ID'
         primary key,
     path        varchar(255)             null comment '资源路径',
     role_ids    varchar(255) default '1' null comment '角色ID',
-    description varchar(255)             null comment '描述'
-);
+    description varchar(255)             null comment '描述',
+    create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
+drop table if exists role;
 create table role
 (
     id          int     auto_increment      not null comment '主键ID'
         primary key,
     name        varchar(255) null comment '角色名称',
     description varchar(255) null comment '描述',
-    constraint role_id_uindex
-        unique (id)
-);
+    create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
-
+drop table if exists user;
 create table user
 (
     id       bigint     auto_increment    not null comment '主键ID'
@@ -29,19 +32,22 @@ create table user
     phone      bigint(11)           null comment '手机号',
     email    varchar(50)   null comment '邮箱',
     status   int default 1 null comment '状态',
-    role_id  int default 1 null comment '角色ID'
-);
+    role_id  int default 1 null comment '角色ID',
+    create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
+drop table if exists user_bind_third_login;
 CREATE TABLE `user_bind_third_login`  (
-                                          `id` bigint(0) NOT NULL COMMENT '主键ID',
-                                          `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '平台类型',
+                                          `id` bigint(0) NOT NULL  AUTO_INCREMENT COMMENT '主键ID',
+                                          `type` varchar(255)  NULL DEFAULT NULL COMMENT '平台类型',
                                           `user_id` bigint(0) NULL DEFAULT NULL COMMENT '用户表主键ID',
-                                          `open_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '用户在第三方平台的唯一ID'  unique,
-                                          `nickname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '昵称',
-                                          `head_sculpture` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '第三方头像',
-                                          `create_time` datetime(0) NULL DEFAULT NULL COMMENT '绑定时间',
+                                          `open_id` varchar(255)  NULL DEFAULT NULL COMMENT '用户在第三方平台的唯一ID'  unique,
+                                          `nickname` varchar(255)  NULL DEFAULT NULL COMMENT '昵称',
+                                          `head_sculpture` varchar(255)  NULL DEFAULT NULL COMMENT '第三方头像',
+                                          `create_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '绑定时间',
                                           PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `role` (`id`, `name`, `description`) VALUES (1, 'common', '普通用户');
 INSERT INTO `role` (`id`, `name`, `description`) VALUES (2, 'admin', '管理员');
