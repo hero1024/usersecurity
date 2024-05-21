@@ -1,5 +1,7 @@
-drop table if exists permission;
-create table permission
+create database if not exists user_security;
+use user_security;
+
+create table if not exists permission
 (
     id          int auto_increment comment '主键ID'
         primary key,
@@ -10,8 +12,7 @@ create table permission
     update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
-drop table if exists role;
-create table role
+create table if not exists role
 (
     id          int     auto_increment      not null comment '主键ID'
         primary key,
@@ -21,8 +22,7 @@ create table role
     update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
-drop table if exists user;
-create table user
+create table if not exists user
 (
     id       bigint     auto_increment    not null comment '主键ID'
         primary key,
@@ -37,16 +37,14 @@ create table user
     update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
-drop table if exists user_bind_third_login;
-CREATE TABLE `user_bind_third_login`  (
-                                          `id` bigint(0) NOT NULL  AUTO_INCREMENT COMMENT '主键ID',
+CREATE TABLE if not exists `user_bind_third_login`  (
+                                          `id` bigint(0) NOT NULL  AUTO_INCREMENT COMMENT '主键ID' PRIMARY KEY ,
                                           `type` varchar(255)  NULL DEFAULT NULL COMMENT '平台类型',
                                           `user_id` bigint(0) NULL DEFAULT NULL COMMENT '用户表主键ID',
-                                          `open_id` varchar(255)  NULL DEFAULT NULL COMMENT '用户在第三方平台的唯一ID'  unique,
+                                          `open_id` varchar(255)  NULL DEFAULT NULL COMMENT '用户在第三方平台的唯一ID'  UNIQUE,
                                           `nickname` varchar(255)  NULL DEFAULT NULL COMMENT '昵称',
                                           `head_sculpture` varchar(255)  NULL DEFAULT NULL COMMENT '第三方头像',
-                                          `create_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '绑定时间',
-                                          PRIMARY KEY (`id`) USING BTREE
+                                          `create_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP COMMENT '绑定时间'
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `role` (`id`, `name`, `description`) VALUES (1, 'common', '普通用户');
