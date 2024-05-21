@@ -3,7 +3,11 @@ package cn.edu.moe.user.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -13,6 +17,7 @@ import java.io.Serializable;
  * @author songpeijiang
  * @since 2024-04-18
  */
+@Data
 public class Permission implements Serializable {
 
 
@@ -26,46 +31,11 @@ public class Permission implements Serializable {
 
     private String description;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Date createTime;
 
-    public Integer getId() {
-        return id;
-    }
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @TableField(value = "update_time", update = "now()")
+    private Date updateTime;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getRoleIds() {
-        return roleIds;
-    }
-
-    public void setRoleIds(String roleIds) {
-        this.roleIds = roleIds;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return "Permissions{" +
-        "id=" + id +
-        ", path=" + path +
-        ", roleIds=" + roleIds +
-        ", description=" + description +
-        "}";
-    }
 }
