@@ -1,0 +1,14 @@
+stages:
+  - package
+
+build:
+  stage: package
+  only:
+    - develop
+  script:
+    - $timestamp = Get-Date $env:CI_COMMIT_TIMESTAMP -Format 'yyyyMMddHHmm'
+    - $newPackageName = "user-security-$timestamp.jar"
+    - mvn package '-Dmaven.test.skip=true' '-Dmaven.repo.local=C:\Users\cbalt\.m2\repository'
+    - cp target/*.jar C:/Data/linux/gitlab-runner-windows-amd64/output/
+    - cd C:/Data/linux/gitlab-runner-windows-amd64/output/
+    - mv usersecurity-0.0.1-SNAPSHOT.jar $newPackageName
