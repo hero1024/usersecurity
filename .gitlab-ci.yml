@@ -4,6 +4,7 @@ stages:
 build:
   stage: package
   only:
+    - master
     - develop
   script:
     - $timestamp = Get-Date $env:CI_COMMIT_TIMESTAMP -Format 'yyyyMMddHHmm'
@@ -12,3 +13,6 @@ build:
     - cp target/*.jar C:/Data/linux/gitlab-runner-windows-amd64/output/
     - cd C:/Data/linux/gitlab-runner-windows-amd64/output/
     - mv usersecurity-0.0.1-SNAPSHOT.jar $newPackageName
+  artifacts:
+    paths:
+      - target/usersecurity-0.0.1-SNAPSHOT.jar
