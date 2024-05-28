@@ -15,4 +15,4 @@ build:
     - mv usersecurity-0.0.1-SNAPSHOT.jar $newPackageName
   artifacts:
     paths:
-      - target/usersecurity-0.0.1-SNAPSHOT.jar
+      - target/*.jar
