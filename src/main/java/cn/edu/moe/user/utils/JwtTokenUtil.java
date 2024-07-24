@@ -38,6 +38,31 @@ public class JwtTokenUtil {
 
 
     /**
+     * 根据用户信息生成加密token
+     */
+    public String gainEncryptToken(String subject)  {
+        String subEncrypt = AesSecureUtil.aesEncrypt(secret, subject);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(CLAIM_KEY_USERNAME, subEncrypt);
+        claims.put(CLAIM_KEY_CREATED, new Date());
+        return generateToken(claims);
+    }
+
+    /**
+     * 从token中获取解密信息
+     */
+    public String getSubjectFromEncryptToken(String token) {
+        String subject;
+        try {
+            Claims claims = getClaimsFromToken(token);
+            subject = AesSecureUtil.aesDecrypt(secret, claims.getSubject());
+        } catch (Exception e) {
+            subject = null;
+        }
+        return subject;
+    }
+
+    /**
      * 根据负责生成JWT的token
      */
     private String generateToken(Map<String, Object> claims) {
@@ -100,7 +125,7 @@ public class JwtTokenUtil {
     /**
      * 判断token是否已经失效
      */
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         Date expiredDate = getExpiredDateFromToken(token);
         return expiredDate.before(new Date());
     }

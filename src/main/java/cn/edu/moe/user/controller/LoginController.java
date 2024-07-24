@@ -58,39 +58,39 @@ public class LoginController {
     @Autowired
     private IUserBindThirdLoginService userBindThirdLoginService;
 
-    @Operation(description = "验证token")
-    @RequestMapping("/auth")
-    public ResponseEntity<CommonResult<String>> auth(HttpServletRequest request, HttpServletResponse response){
-        String sourceIP = request.getHeader("X-Forwarded-For");
-        String originalUri = request.getHeader("X-Forwarded-Uri");
-        String authHeader = request.getHeader(tokenHeader);
-        if (authHeader != null && authHeader.startsWith(tokenType)) {
-            String authToken = authHeader.substring(tokenType.length());// The part after "Bearer "
-            String username = jwtTokenUtil.getUserNameFromToken(authToken);
-            if (username != null) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                if (userDetails != null && jwtTokenUtil.validateToken(authToken, userDetails)) {
-                    if (loginService.validatePermission(username, originalUri)) {
-                        if (SecurityContextHolder.getContext().getAuthentication() == null) {
-                            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                            SecurityContextHolder.getContext().setAuthentication(authentication);
-                        }
-                        User user = loginService.getUserByUsername(username);
-                        log.info("========= 权限校验通过， username:{}, sourceIP:{}, originalUri：{}, authHeader:{} =========", username, sourceIP, originalUri, authHeader);
-                        HttpHeaders headers = new HttpHeaders();
-                        headers.add("X-User-ID", String.valueOf(user.getId()));
-                        headers.add("X-Forwarded-For", sourceIP);
-                        return new ResponseEntity<>(CommonResult.success(authToken), headers, HttpStatus.OK);
-                    }
-                }
-            }
-        }
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", urlsConfig.getLogin());
-        //return new ResponseEntity<>("token验证失败", headers, HttpStatus.FOUND);
-        return new ResponseEntity<>(CommonResult.unauthorized("token验证失败"), headers, HttpStatus.UNAUTHORIZED);
-    }
+//    @Operation(description = "验证token")
+//    @RequestMapping("/auth")
+//    public ResponseEntity<CommonResult<String>> auth(HttpServletRequest request, HttpServletResponse response){
+//        String sourceIP = request.getHeader("X-Forwarded-For");
+//        String originalUri = request.getHeader("X-Forwarded-Uri");
+//        String authHeader = request.getHeader(tokenHeader);
+//        if (authHeader != null && authHeader.startsWith(tokenType)) {
+//            String authToken = authHeader.substring(tokenType.length());// The part after "Bearer "
+//            String username = jwtTokenUtil.getUserNameFromToken(authToken);
+//            if (username != null) {
+//                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+//                if (userDetails != null && jwtTokenUtil.validateToken(authToken, userDetails)) {
+//                    if (loginService.validatePermission(username, originalUri)) {
+//                        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+//                            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//                            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//                            SecurityContextHolder.getContext().setAuthentication(authentication);
+//                        }
+//                        User user = loginService.getUserByUsername(username);
+//                        log.info("========= 权限校验通过， username:{}, sourceIP:{}, originalUri：{}, authHeader:{} =========", username, sourceIP, originalUri, authHeader);
+//                        HttpHeaders headers = new HttpHeaders();
+//                        headers.add("X-User-ID", String.valueOf(user.getId()));
+//                        headers.add("X-Forwarded-For", sourceIP);
+//                        return new ResponseEntity<>(CommonResult.success(authToken), headers, HttpStatus.OK);
+//                    }
+//                }
+//            }
+//        }
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Location", urlsConfig.getLogin());
+//        //return new ResponseEntity<>("token验证失败", headers, HttpStatus.FOUND);
+//        return new ResponseEntity<>(CommonResult.unauthorized("token验证失败"), headers, HttpStatus.UNAUTHORIZED);
+//    }
 
     @Operation(description = "获取用户信息")
     @GetMapping("/userinfo")

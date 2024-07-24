@@ -40,5 +40,8 @@ secure:
       - /login
       - /auth
       - /callback
+      - /encrypt/token
+      - /forward/auth
     login: http://127.0.0.1:8082/security/doc.html
+    forward: http://127.0.0.1:8082/security/doc.html
 

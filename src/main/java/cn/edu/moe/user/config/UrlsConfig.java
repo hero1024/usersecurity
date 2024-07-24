@@ -11,5 +11,6 @@ public class UrlsConfig {
 
     private List<String> ignored;
     private String login;
+    private String forward;
 
 }
