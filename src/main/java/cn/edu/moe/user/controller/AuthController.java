@@ -9,14 +9,13 @@ import cn.edu.moe.user.service.IUserBindThirdLoginService;
 import cn.edu.moe.user.service.LoginService;
 import cn.edu.moe.user.utils.AesSecureUtil;
 import cn.edu.moe.user.utils.JwtTokenUtil;
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,6 +30,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 @Slf4j
 @Api(tags = "鉴权")
@@ -100,29 +100,43 @@ public class AuthController {
         String sourceIP = request.getHeader("X-Forwarded-For");
         String originalUri = request.getHeader("X-Forwarded-Uri");
         String authHeader = request.getHeader(tokenHeader);
+        JSONObject result = null;
         if (authHeader != null && authHeader.startsWith(tokenType)) {
             // The part after "Bearer "
             String authToken = authHeader.substring(tokenType.length());
             String subject = jwtTokenUtil.getSubjectFromEncryptToken(authToken);
             if (subject != null) {
-                boolean validateToken = false;
                 try {
-                    validateToken = restTemplate.postForObject(urlsConfig.getForward(), subject, Boolean.class);
+                    // 自定义 header
+                    HttpHeaders headers1 = new HttpHeaders();
+                    // 自定义cookie
+                    List<String> cookies = new ArrayList<>();
+                    cookies.add(subject);
+                    // 直接放进headers 中
+                    headers1.put(HttpHeaders.COOKIE, cookies);
+                    // 设置 body数据类型为json
+                    headers1.setContentType(MediaType.APPLICATION_JSON);
+                    // url  request  responseType uriva
+                    ResponseEntity<JSONObject> stringResponseEntity = restTemplate.exchange(urlsConfig.getForward(), HttpMethod.GET, new HttpEntity<>(headers1), JSONObject.class);
+                    // 同样关注 body里的信息
+                    result = stringResponseEntity.getBody();
+                    log.info("forwardAuth result:{}", result);
                 } catch (Exception e) {
                     log.error("========= 权限校验失败， forwardAuth:{}, sourceIP:{}, originalUri：{}, authHeader:{} =========", urlsConfig.getForward(), sourceIP, originalUri, authHeader, e);
                 }
 
-                if (validateToken && !jwtTokenUtil.isTokenExpired(authToken)) {
+                if (result != null && Objects.equals(result.getInteger("e"), 0) && !jwtTokenUtil.isTokenExpired(authToken)) {
                     log.info("========= 权限校验通过， forwardAuth:{}, sourceIP:{}, originalUri：{}, authHeader:{} =========", urlsConfig.getForward(), sourceIP, originalUri, authHeader);
                     HttpHeaders headers = new HttpHeaders();
                     headers.add("X-Forwarded-For", sourceIP);
-                    return new ResponseEntity<>(CommonResult.success(authToken), headers, HttpStatus.OK);
+                    return new ResponseEntity<>(CommonResult.success(result.toJSONString()), headers, HttpStatus.OK);
                 }
             }
         }
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Forwarded-For", sourceIP);
-        return new ResponseEntity<>(CommonResult.unauthorized("token验证失败"), headers, HttpStatus.UNAUTHORIZED);
+        String body = result == null ? "token验证失败" : result.toJSONString();
+        return new ResponseEntity<>(CommonResult.unauthorized(body), headers, HttpStatus.UNAUTHORIZED);
     }
 
 }

@@ -45,5 +45,5 @@ secure:
       - /encrypt/token
       - /forward/auth
     login: http://localhost:8080/#/
-    forward: http://127.0.0.1:8082/security/doc.html
+    forward: https://data.moe.edu.cn/site/user_info
 
