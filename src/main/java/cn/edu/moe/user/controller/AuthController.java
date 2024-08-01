@@ -91,7 +91,9 @@ public class AuthController {
     @Operation(description = "获取加密token")
     @PostMapping("/encrypt/token")
     public CommonResult<String> gainToken(@RequestBody ForwardAuth forwardAuth)  {
-        return CommonResult.success(jwtTokenUtil.gainEncryptToken(forwardAuth.getCookie()));
+        String encryptToken = jwtTokenUtil.gainEncryptToken(forwardAuth.getCookie());
+        log.info("forwardAuth:{}, encryptToken:{}", forwardAuth, encryptToken);
+        return CommonResult.success(encryptToken);
     }
 
     @Operation(description = "解密验证token")
@@ -105,13 +107,15 @@ public class AuthController {
             // The part after "Bearer "
             String authToken = authHeader.substring(tokenType.length());
             String subject = jwtTokenUtil.getSubjectFromEncryptToken(authToken);
+            log.info("authToken:{}, subject:{}", authToken, subject);
             if (subject != null) {
                 try {
                     // 自定义 header
                     HttpHeaders headers1 = new HttpHeaders();
                     // 自定义cookie
+                    String cookie = "cookie_vjuid_login=" + subject;
                     List<String> cookies = new ArrayList<>();
-                    cookies.add(subject);
+                    cookies.add(cookie);
                     // 直接放进headers 中
                     headers1.put(HttpHeaders.COOKIE, cookies);
                     // 设置 body数据类型为json
@@ -120,7 +124,7 @@ public class AuthController {
                     ResponseEntity<JSONObject> stringResponseEntity = restTemplate.exchange(urlsConfig.getForward(), HttpMethod.GET, new HttpEntity<>(headers1), JSONObject.class);
                     // 同样关注 body里的信息
                     result = stringResponseEntity.getBody();
-                    log.info("forwardAuth result:{}", result);
+                    log.info("forwardAuth result:{}, cookie:{}", result, cookie);
                 } catch (Exception e) {
                     log.error("========= 权限校验失败， forwardAuth:{}, sourceIP:{}, originalUri：{}, authHeader:{} =========", urlsConfig.getForward(), sourceIP, originalUri, authHeader, e);
                 }
