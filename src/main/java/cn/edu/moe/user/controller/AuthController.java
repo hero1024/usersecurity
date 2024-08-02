@@ -51,7 +51,7 @@ public class AuthController {
     @Autowired
     private LoginService loginService;
     @Autowired
-    private RestTemplate restTemplate;
+    private RestTemplate noSSLRestTemplate;
 
     @Operation(description = "验证token")
     @RequestMapping("/auth")
@@ -121,7 +121,7 @@ public class AuthController {
                     // 设置 body数据类型为json
                     headers1.setContentType(MediaType.APPLICATION_JSON);
                     // url  request  responseType uriva
-                    ResponseEntity<JSONObject> stringResponseEntity = restTemplate.exchange(urlsConfig.getForward(), HttpMethod.GET, new HttpEntity<>(headers1), JSONObject.class);
+                    ResponseEntity<JSONObject> stringResponseEntity = noSSLRestTemplate.exchange(urlsConfig.getForward(), HttpMethod.GET, new HttpEntity<>(headers1), JSONObject.class);
                     // 同样关注 body里的信息
                     result = stringResponseEntity.getBody();
                     log.info("forwardAuth result:{}, cookie:{}", result, cookie);
