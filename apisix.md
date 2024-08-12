@@ -47,39 +47,6 @@ Content-Type: application/json
 }
 
 ###
-
-curl -X PUT -H "Content-Type: application/json" -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1" -d '
-{
-  "name": "smiling_auth",
-  "plugins": {
-    "forward-auth": {
-      "uri": "http://10.20.13.162:8082/security/auth",
-      "request_headers": ["Authorization"],
-      "upstream_headers": ["X-User-ID"],
-      "client_headers": ["Location"]
-    },
-    "cors": {},
-    "prometheus":{
-      "prefer_name": true
-    },
-    "file-logger": {
-      "path": "logs/file.log"
-    }
-  },
-  "uris": [
-    "/smiling/question/*",
-    "/smiling/dbsource/*",
-    "/smiling/education/*"
-  ],
-  "upstream": {
-    "type": "roundrobin",
-    "nodes": {
-      "10.20.13.162:8081": 1
-    }
-  }
-}' http://127.0.0.1:9180/apisix/admin/routes/1
-
-###
 PUT http://127.0.0.1:9180/apisix/admin/routes/2
 X-API-KEY: edd1c9f034335f136f87ad84b625c8f1
 Content-Type: application/json
@@ -117,11 +84,44 @@ Content-Type: application/json
 
 curl -X PUT -H "Content-Type: application/json" -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1" -d '
 {
+  "name": "smiling_auth",
+  "plugins": {
+    "forward-auth": {
+      "uri": "http://10.20.13.237:8082/security/auth",
+      "request_headers": ["Authorization"],
+      "upstream_headers": ["X-User-ID"],
+      "client_headers": ["Location"]
+    },
+    "cors": {},
+    "prometheus":{
+      "prefer_name": true
+    },
+    "file-logger": {
+      "path": "logs/file.log"
+    }
+  },
+  "uris": [
+    "/smiling/question/*",
+    "/smiling/dbsource/*",
+    "/smiling/education/*"
+  ],
+  "upstream": {
+    "type": "roundrobin",
+    "nodes": {
+      "10.20.13.237:8081": 1
+    }
+  }
+}' http://127.0.0.1:9180/apisix/admin/routes/1
+
+###
+
+curl -X PUT -H "Content-Type: application/json" -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1" -d '
+{
   "name": "glm_auth",
   "uri": "/glm/*",
   "plugins": {
     "forward-auth": {
-      "uri": "http://10.20.13.162:8082/security/auth",
+      "uri": "http://10.20.13.237:8082/security/auth",
       "request_headers": ["Authorization"],
       "upstream_headers": ["X-User-ID"],
       "client_headers": ["Location"]
@@ -151,7 +151,7 @@ curl -X PUT -H "Content-Type: application/json" -H "X-API-KEY: edd1c9f034335f136
   "uri": "/screen/glm/*",
   "plugins": {
     "forward-auth": {
-      "uri": "http://10.20.13.162:8082/security/forward/auth",
+      "uri": "http://10.20.13.237:8082/security/forward/auth",
       "request_headers": ["Authorization"],
       "upstream_headers": ["X-User-ID"],
       "client_headers": ["Location"]
