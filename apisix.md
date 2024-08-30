@@ -90,7 +90,8 @@ curl -X PUT -H "Content-Type: application/json" -H "X-API-KEY: edd1c9f034335f136
       "uri": "http://10.20.13.237:8082/security/auth",
       "request_headers": ["Authorization"],
       "upstream_headers": ["X-User-ID"],
-      "client_headers": ["Location"]
+      "client_headers": ["Location"],
+      "timeout": 30000
     },
     "cors": {},
     "prometheus":{
@@ -124,7 +125,8 @@ curl -X PUT -H "Content-Type: application/json" -H "X-API-KEY: edd1c9f034335f136
       "uri": "http://10.20.13.237:8082/security/auth",
       "request_headers": ["Authorization"],
       "upstream_headers": ["X-User-ID"],
-      "client_headers": ["Location"]
+      "client_headers": ["Location"],
+      "timeout": 30000
     },
     "cors": {},
     "prometheus":{
@@ -154,7 +156,8 @@ curl -X PUT -H "Content-Type: application/json" -H "X-API-KEY: edd1c9f034335f136
       "uri": "http://10.20.13.237:8082/security/forward/auth",
       "request_headers": ["Authorization"],
       "upstream_headers": ["X-User-ID"],
-      "client_headers": ["Location"]
+      "client_headers": ["Location"],
+      "timeout": 30000
     },
     "cors": {},
     "prometheus":{
