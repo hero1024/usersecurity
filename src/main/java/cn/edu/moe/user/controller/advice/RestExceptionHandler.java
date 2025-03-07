@@ -33,7 +33,7 @@ public class RestExceptionHandler {
      * @return CommonResult
      */
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public CommonResult<String> exception(Exception e) {
         log.error("全局异常信息 ex={}", e.getMessage(), e);
         return CommonResult.failed(ResultCode.FAILED,e.getMessage());
@@ -69,7 +69,7 @@ public class RestExceptionHandler {
             );
         }
 
-        return new ResponseEntity<>(resp,HttpStatus.OK);
+        return new ResponseEntity<>(resp,HttpStatus.BAD_REQUEST);
     }
 
 }

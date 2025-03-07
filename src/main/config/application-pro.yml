@@ -46,4 +46,4 @@ secure:
       - /forward/auth
     login: http://localhost:8080/#/
     forward: https://data.moe.edu.cn/site/user_info
-
+  defaultPwd: 123456
