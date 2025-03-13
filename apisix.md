@@ -206,3 +206,39 @@ curl -X PUT -H "Content-Type: application/json" -H "X-API-KEY: edd1c9f034335f136
 }' http://127.0.0.1:9180/apisix/admin/routes/4 
 ```
 
+###
+
+curl -X PUT -H "Content-Type: application/json" -H "X-API-KEY: edd1c9f034335f136f87ad84b625c8f1" -d '
+{
+"name": "smiling_auth",
+"plugins": {
+"forward-auth": {
+"uri": "http://10.20.13.237:8082/security/auth",
+"request_headers": ["Authorization"],
+"upstream_headers": ["X-User-ID"],
+"client_headers": ["Location"],
+"timeout": 30000,
+"keepalive": false,
+"ssl_verify": false
+},
+"cors": {},
+"prometheus":{
+"prefer_name": true
+},
+"file-logger": {
+"path": "logs/file.log"
+}
+},
+"uris": [
+"/smiling/question/*",
+"/smiling/dbsource/*",
+"/smiling/edufile/*"
+],
+"upstream": {
+"type": "roundrobin",
+"nodes": {
+"10.20.13.237:8081": 1
+}
+}
+}' http://127.0.0.1:9180/apisix/admin/routes/1
+
