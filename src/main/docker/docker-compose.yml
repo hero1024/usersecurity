@@ -17,3 +17,6 @@ services:
       - ./config:/config
       - /data:/data
       - ./usersecurity-0.0.1-SNAPSHOT.jar:/user-security.jar
+    extra_hosts:
+      - "data.moe.edu.cn:10.20.121.97"
+
