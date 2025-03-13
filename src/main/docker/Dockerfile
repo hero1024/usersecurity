@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine
+FROM chatdata_adm:v1
 VOLUME /data
 VOLUME /config
 ADD usersecurity-0.0.1-SNAPSHOT.jar user-security.jar
